@@ -1,3 +1,9 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const ACCESS_KEY = process.env.ACCESS_KEY || "accessKey";
+const REFRESH_KEY = process.env.REFRESH_KEY || "refreshKey";
+const environment = process.env.environment || "production";
+
 let users = [{ id: 1, username: "user1", password: "password1" }];
 let refreshTokens = [];
 
