@@ -81,3 +81,13 @@ const refreshAccessToken = (req, res) => {
     res.status(401).json({ message: "Refresh token expired or invalid" });
   }
 };
+
+const logout = (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+
+  res.clearCookie("refreshToken");
+
+  res.json({ message: "Logged out successfully" });
+};
