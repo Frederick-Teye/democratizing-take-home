@@ -54,3 +54,30 @@ const getProfile = (req, res) => {
   const user = users.find((u) => u.username === req.user);
   res.json({ message: "Profile accessed", user });
 };
+
+const refreshAccessToken = (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Refresh token not found" });
+  }
+
+  if (!refreshTokens.includes(refreshToken)) {
+    return res.status(401).json({ message: "Refresh token invalid" });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, REFRESH_KEY);
+    const newAccessToken = jwt.sign(
+      { username: decoded.username },
+      ACCESS_KEY,
+      {
+        expiresIn: "15m",
+      },
+    );
+
+    res.json({ accessToken: newAccessToken });
+  } catch (error) {
+    res.status(401).json({ message: "Refresh token expired or invalid" });
+  }
+};
