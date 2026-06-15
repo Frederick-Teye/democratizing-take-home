@@ -49,3 +49,8 @@ const login = async (req, res) => {
 
   res.json({ accessToken, msg: "Login successful" });
 };
+
+const getProfile = (req, res) => {
+  const user = users.find((u) => u.username === req.user);
+  res.json({ message: "Profile accessed", user });
+};
