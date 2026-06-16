@@ -15,6 +15,9 @@ app.use(logger);
 
 app.use("/api/auth", authRoutes);
 
+app.use(notFound);
+app.use(errorHandler);
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
