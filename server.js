@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth");
 const logger = require("./middleware/logger");
 const notFound = require("./middleware/notFound");
-const errorHandler = require("./middleware/errorHandler");
+const errorHandler = require("./middleware/error");
 const port = process.env.PORT || 8000;
 
 app.use(express.json());
