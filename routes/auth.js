@@ -10,14 +10,15 @@ const {
 } = require("../controllers/authController");
 
 const authenticateJWT = require("../middleware/authenticateJWTMiddleware");
+const { loginLimiter, registerLimiter } = require("../middleware/rateLimiter");
 
 const ACCESS_KEY = process.env.ACCESS_KEY || "accessKey";
 const REFRESH_KEY = process.env.REFRESH_KEY || "refreshKey";
 const environment = process.env.environment || "production";
 
-router.post("/register", registerUser);
+router.post("/register", registerLimiter, registerUser);
 
-router.post("/login", login);
+router.post("/login", loginLimiter, login);
 
 router.get("/profile", authenticateJWT, getProfile);
 

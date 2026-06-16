@@ -5,6 +5,7 @@ const authRoutes = require("./routes/auth");
 const logger = require("./middleware/logger");
 const notFound = require("./middleware/notFound");
 const errorHandler = require("./middleware/error");
+const { limiter } = require("./middleware/rateLimiter");
 const port = process.env.PORT || 8000;
 
 app.use(express.json());
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(logger);
+app.use(limiter);
 
 app.use("/api/auth", authRoutes);
 
