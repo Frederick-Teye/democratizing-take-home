@@ -7,11 +7,15 @@ const environment = process.env.environment || "production";
 let users = [{ id: 1, username: "user1", password: "password1" }];
 let refreshTokens = [];
 
-const registerUser = async (req, res) => {
+// @desc    Register user
+// @route   POST /api/auth/register
+const registerUser = async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ msg: "Username and password are required" });
+    const error = new Error("Username and password are required");
+    error.status = 400;
+    return next(error);
   }
 
   if (users.find((u) => u.username === username)) {
@@ -25,18 +29,24 @@ const registerUser = async (req, res) => {
   res.status(201).json({ msg: "User registered successfully" });
 };
 
-const login = async (req, res) => {
+// @desc    Login user
+// @route   POST /api/auth/login
+const login = async (req, res, next) => {
   const { username, password } = req.body;
 
   const user = users.find((u) => u.username === username);
 
   if (!user) {
-    return res.status(400).json({ msg: "Invalid credential" });
+    const error = new Error("Invalid credential");
+    error.status = 400;
+    return next(error);
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(400).json({ msg: "Invalid credential" });
+    const error = new Error("Invalid credential");
+    error.status = 400;
+    return next(error);
   }
 
   const accessToken = jwt.sign({ username: user.username }, ACCESS_KEY, {
@@ -59,20 +69,28 @@ const login = async (req, res) => {
   res.json({ accessToken, msg: "Login successful" });
 };
 
-const getProfile = (req, res) => {
+// @desc    Get user profile
+// @route   GET /api/auth/profile
+const getProfile = (req, res, next) => {
   const user = users.find((u) => u.username === req.user);
   res.json({ message: "Profile accessed", user });
 };
 
-const refreshAccessToken = (req, res) => {
+// @desc    Get new access token for user
+// @route   POST /api/auth/refresh
+const refreshAccessToken = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    return res.status(401).json({ message: "Refresh token not found" });
+    const error = new Error("Refresh token not found");
+    error.status = 401;
+    return next(error);
   }
 
   if (!refreshTokens.includes(refreshToken)) {
-    return res.status(401).json({ message: "Refresh token invalid" });
+    const error = new Error("Refresh token invalid");
+    error.status = 401;
+    return next(error);
   }
 
   try {
@@ -86,12 +104,16 @@ const refreshAccessToken = (req, res) => {
     );
 
     res.json({ accessToken: newAccessToken });
-  } catch (error) {
-    res.status(401).json({ message: "Refresh token expired or invalid" });
+  } catch (err) {
+    const error = new Error("Refresh token expired or invalid");
+    error.status = 401;
+    return next(error);
   }
 };
 
-const logout = (req, res) => {
+// @desc    Log user out
+// @route   GET /api/auth/logout
+const logout = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
 
   refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
