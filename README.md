@@ -2,6 +2,16 @@
 
 JWT-based authentication server with rate limiting and secure password hashing.
 
+## Clone the Project
+
+Create a new directory and clone the project:
+
+```bash
+mkdir democratizing-take-home
+cd democratizing-take-home
+git clone git@github.com:Frederick-Teye/democratizing-take-home.git .
+```
+
 ## Setup
 
 ```bash
