@@ -9,7 +9,7 @@ const {
   logout,
 } = require("../controllers/authController");
 
-const authenticateJWT = require("../middleware/authenticateJWTMiddleware");
+const authenticateJWT = require("../middleware/authenticateJWT");
 const { loginLimiter, registerLimiter } = require("../middleware/rateLimiter");
 
 const ACCESS_KEY = process.env.ACCESS_KEY || "accessKey";
